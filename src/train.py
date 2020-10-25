@@ -1,6 +1,6 @@
 import cv2
-import os
 import numpy as np
+import sys
 
 import tensorflow as tf
 from tensorflow import keras
@@ -13,18 +13,17 @@ from tensorflow.keras.preprocessing import image_dataset_from_directory
 import constants
 import utils
 
-dataset_url = "http://www.eecs.berkeley.edu/Research/Projects/CS/vision/grouping/BSR/BSR_bsds500.tgz"
-data_dir = keras.utils.get_file(origin=dataset_url, fname="BSR", untar=True)
-root_dir = os.path.join(data_dir, "BSDS500/data")
+#Set of variables used for training the model
 crop_size = 300
 input_size = crop_size // constants.UPSCALE_FACTOR
 batch_size = 8
-epochs = 10
+epochs = 100
 
-def create_datasets():
+#Function that creates training dataset and validation dataset
+def create_datasets(dataset_dir):
 
     train_ds = image_dataset_from_directory(
-        root_dir,
+        dataset_dir,
         batch_size=batch_size,
         image_size=(crop_size, crop_size),
         validation_split=0.2,
@@ -34,7 +33,7 @@ def create_datasets():
     )
 
     valid_ds = image_dataset_from_directory(
-        root_dir,
+        dataset_dir,
         batch_size=batch_size,
         image_size=(crop_size, crop_size),
         validation_split=0.2,
@@ -44,6 +43,8 @@ def create_datasets():
     )
     return train_ds, valid_ds
 
+
+#Function that apply treatment to create input images and result images
 def preprocess_dataset(dataset):
     preprocessed_dataset = dataset.map(utils.scaling)
     preprocessed_dataset = preprocessed_dataset.map(
@@ -51,7 +52,7 @@ def preprocess_dataset(dataset):
     )
     return preprocessed_dataset
 
-    
+#Creates the image upscaling model
 def create_model(channels=3):
     conv_args = {
         "activation": "relu",
@@ -67,6 +68,7 @@ def create_model(channels=3):
 
     return keras.Model(inputs, outputs)
 
+#Trains the model
 def train_model(model, train_ds, valid_ds, epochs=100):
     loss = keras.losses.MeanSquaredError()
     optimizer = keras.optimizers.Adam(learning_rate=0.001)
@@ -75,15 +77,20 @@ def train_model(model, train_ds, valid_ds, epochs=100):
 
     model.fit(train_ds, epochs=epochs, validation_data=valid_ds)
 
+#Save the model in a file
 def save_model(model, model_name):
     model.save(model_name)
 
+#Launch the training process of the face upscaling model
 def run_train():
-    train_ds, valid_ds = create_datasets()
-    train_ds = preprocess_dataset(train_ds)
-    valid_ds = preprocess_dataset(valid_ds)
-    model = create_model()
-    train_model(model, train_ds, valid_ds, epochs=epochs)
-    save_model(model, constants.MODEL_NAME)
+    if (len(sys.argv) != 2):
+        print("help : python src/train.py DATASET_DIRECTORY_PATH")
+    else:
+        train_ds, valid_ds = create_datasets(sys.argv[1])
+        train_ds = preprocess_dataset(train_ds)
+        valid_ds = preprocess_dataset(valid_ds)
+        model = create_model()
+        train_model(model, train_ds, valid_ds, epochs=epochs)
+        save_model(model, constants.MODEL_NAME)
 
 run_train()

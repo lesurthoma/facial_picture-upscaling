@@ -6,6 +6,7 @@ import numpy as np
 import constants
 import utils
 
+#A function that applies an upscaling to an image
 def upscale_image(model, img):
     img_scaled = utils.scaling(img)
     input = np.expand_dims(img_scaled, axis=0)
@@ -15,6 +16,7 @@ def upscale_image(model, img):
     out_img.clip(0, 255)
     return out_img
 
+#Run the entire process to upscale an image and save the result into a file
 def run():
     if (len(sys.argv) != 3):
         print("help : python src/upscale_face.py [src_image] [dest_file]")

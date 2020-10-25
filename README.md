@@ -28,10 +28,10 @@ deactivate
 
 ## train the model
 ```bash
-python src/train.py
+python src/train.py DATASET_DIRECTORY_PATH
 ```
 
-## use the model
+## use the model to upscale an image and save the result in a file
 ```bash
 python src/upscale_face.py SOURCE_IMAGE_PATH DESTINATION_FILE_PATH
 ```
