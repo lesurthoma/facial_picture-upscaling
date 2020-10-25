@@ -37,6 +37,6 @@ python src/upscale_face.py SOURCE_IMAGE_PATH DESTINATION_FILE_PATH
 ``` 
 
 ## Related works
- -Real-Time Single Image and Video Super-Resolution Using an Efficient Sub-Pixel Convolutional Neural Network by Wenzhe Shi, Jose Caballero, Ferenc Huszár, Johannes Totz, Andrew P. Aitken, Rob Bishop, Daniel Rueckert, Zehan Wang
- -UTKFace dataset https://susanqq.github.io/UTKFace/
+ - Real-Time Single Image and Video Super-Resolution Using an Efficient Sub-Pixel Convolutional Neural Network by Wenzhe Shi, Jose Caballero, Ferenc Huszár, Johannes Totz, Andrew P. Aitken, Rob Bishop, Daniel Rueckert, Zehan Wang
+ - UTKFace dataset https://susanqq.github.io/UTKFace/
 ```
